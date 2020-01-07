@@ -16,8 +16,8 @@ int main()
 	{
 		if (!src)
 		{
-			cmds.getline(cmd , 999);
 			if (cmds.eof()) cmds.close() , src = 1;
+			cmds.getline(cmd , 999);
 		}
 		if (src) std::cin.getline(cmd , 999);
 		int len = strlen(cmd);argc = 0;
