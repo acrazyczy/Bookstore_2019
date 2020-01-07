@@ -54,6 +54,7 @@ bookstore::Visitor::Visitor(std::string user_id_ , std::string passwd_ , std::st
 
 void bookstore::Visitor::add_to_system_log() const
 {
+	//to do
 }
 
 void bookstore::Visitor::reg(std::string user_id_ , std::string passwd_ , std::string name_) const
@@ -113,10 +114,12 @@ bookstore::Admin::Admin(std::string user_id_ , std::string passwd_ , std::string
 
 void bookstore::Admin::add_to_operating_list(std::string) const
 {
+	//to do
 }
 
 void bookstore::Admin::report_work() const
 {
+	//to do
 }
 
 void bookstore::Admin::useradd(std::string user_id_ , std::string passwd_ , std::string name_ , int authority_) const
@@ -269,6 +272,7 @@ bool bookstore::command(int argc , char *argv[] , bool &src , std::ifstream &ist
 	if (!~argc || argc == 2 && std::string(argv[0]) == std::string("load"))
 	{
 		if (argc != 2 && ~argc) invalid();
+		else if (~argc && current_user -> authority != 7) invalid();
 		else
 		{
 			if (~argc) ist.open(argv[1]);
