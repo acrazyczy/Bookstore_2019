@@ -1,0 +1,11 @@
+# Project exclude paths
+/cmake-build-debug/
+/.idea/
+/Sample/
+/test_data/
+/judge.py
+/README.md
+/readme.pdf
+/readme.png
+/restart.cmd
+/Sample.zip
