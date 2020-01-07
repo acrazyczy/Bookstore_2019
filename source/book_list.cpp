@@ -17,9 +17,11 @@ book_list::book_list()
 	else in.close();
 }
 
-void book_list::add_to_hash_tables(const book &bk)
+void book_list::add_to_hash_tables(const book &bk , const int &state)
 {
-	name_table.insert(bk.name , bk.ISBN) , author_table.insert(bk.author , bk.ISBN);
+	if (!(state & 1)) name_table.insert(bk.name , bk.ISBN);
+	if (!((state >> 1) & 1)) author_table.insert(bk.author , bk.ISBN);
+	if (state >> 2) return;
 	char *cstr = new char [max_len];
 	int len = 0;std::set<std::string> bin;std::string tmp;
 	for (std::string::const_iterator it = bk.keyword.begin();it != bk.keyword.end();++ it)
@@ -34,9 +36,11 @@ void book_list::add_to_hash_tables(const book &bk)
 	delete [] cstr;
 }
 
-void book_list::remove_from_hash_tables(const book &bk)
+void book_list::remove_from_hash_tables(const book &bk , const int &state)
 {
-	name_table.erase(bk.name , bk.ISBN) , author_table.erase(bk.author , bk.ISBN);
+	if (!(state & 1)) name_table.erase(bk.name , bk.ISBN);
+	if (!((state >> 1) & 1)) author_table.erase(bk.author , bk.ISBN);
+	if (state >> 2) return;
 	char *cstr = new char [max_len];
 	int len = 0;std::set<std::string> bin;std::string tmp;
 	for (std::string::const_iterator it = bk.keyword.begin();it != bk.keyword.end();++ it)
@@ -51,7 +55,7 @@ void book_list::remove_from_hash_tables(const book &bk)
 	delete [] cstr;
 }
 
-book_list::book::book(std::string ISBN_ , std::string name_ = "" , std::string author_ = "" , std::string keyword_ = "" , double price_ = 0. , int quantity_ = 0)
+book_list::book::book(std::string ISBN_ , std::string name_ , std::string author_ , std::string keyword_ , double price_ , int quantity_ , int state)
 {
 	ISBN = ISBN_;
 	std::string file_path = "book_list_" + ISBN + ".dat";
@@ -67,7 +71,7 @@ book_list::book::book(std::string ISBN_ , std::string name_ = "" , std::string a
 		price = price_ , out.write(reinterpret_cast<char *> (&price) , sizeof (double));
 		quantity = quantity_ , out.write(reinterpret_cast<char *> (&quantity) , sizeof (int));
 		out.close();
-		add_to_hash_tables(*this);
+		add_to_hash_tables(*this , state);
 	}
 	else
 	{
@@ -143,8 +147,9 @@ bool book_list::modify(const std::string &ISBN_ , const std::string &name_ , con
 		}
 	}
 	book bk(selected);
-	remove(("book_list_" + selected + ".dat").c_str()) , remove_from_hash_tables(bk);
-	book nbk(selected = ISBN_.empty() ? bk.ISBN : ISBN_ , name_.empty() ? bk.name : name_ , author_.empty() ? bk.author : author_ , keyword_.empty() ? bk.keyword : keyword_ , price_ == -1? bk.price : price_ , bk.quantity);
+	int state = (ISBN_ == bk.ISBN) * (((name_ == bk.name) << 0) | ((author_ == bk.author) << 1) | ((keyword_ == bk.keyword) << 2));
+	remove(("book_list_" + selected + ".dat").c_str()) , remove_from_hash_tables(bk , state);
+	book nbk(selected = ISBN_.empty() ? bk.ISBN : ISBN_ , name_.empty() ? bk.name : name_ , author_.empty() ? bk.author : author_ , keyword_.empty() ? bk.keyword : keyword_ , price_ == -1 ? bk.price : price_ , bk.quantity , state);
 	return 1;
 }
 

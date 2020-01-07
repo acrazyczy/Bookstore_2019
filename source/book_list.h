@@ -27,14 +27,14 @@ private:
 		double price;
 		int quantity;
 
-		book(std::string , std::string , std::string , std::string , double , int);
+		book(std::string , std::string = "" , std::string = "" , std::string = "" , double = 0. , int = 0 , int = 0);
 
 		~book(){}
 	};
 
-	static void add_to_hash_tables(const book&);
+	static void add_to_hash_tables(const book& , const int&);
 
-	static void remove_from_hash_tables(const book&);
+	static void remove_from_hash_tables(const book& , const int&);
 public:
 	book_list();
 
