@@ -18,16 +18,16 @@ hash_table::hash_table(std::string name)
 {
 	folder_name = name;
 	std::ifstream in;std::ofstream out;
-	in.open("../" + folder_name + "/tmp.dat" , ios::binary);
+	in.open("" + folder_name + "_tmp.dat" , ios::binary);
 	if (in) in.close();
-	else out.open("../" + folder_name + "/tmp.dat" , ios::binary),out.close();
+	else out.open("" + folder_name + "_tmp.dat" , ios::binary),out.close();
 }
 
 std::vector<std::string> hash_table::find(std::string target) const
 {
 	std::vector<std::string> ret;
 	unsigned int hash_value = gethash(target);
-	std::string file_path = "../" + folder_name + "/hash_table_" + std::to_string(hash_value >> nsize) + ".dat";
+	std::string file_path = "" + folder_name + "_hash_table_" + std::to_string(hash_value >> nsize) + ".dat";
 	std::ifstream in(file_path , ios::binary);
 	if (in) for (int i = 0 , tot;i < file_size;++ i)
 	{
@@ -46,9 +46,9 @@ std::vector<std::string> hash_table::find(std::string target) const
 void hash_table::insert(std::string t_key , std::string t_value) const
 {
 	unsigned int hash_value = gethash(t_key);
-	std::string file_path = "../" + folder_name + "/hash_table_" + std::to_string(hash_value >> nsize) + ".dat";
+	std::string file_path = "" + folder_name + "_hash_table_" + std::to_string(hash_value >> nsize) + ".dat";
 	std::ifstream in , tmp_;std::ofstream out , tmp;
-	in.open(file_path , ios::binary) , tmp.open("../" + folder_name + "/tmp.dat" , ios::binary);
+	in.open(file_path , ios::binary) , tmp.open("" + folder_name + "_tmp.dat" , ios::binary);
 	if (!in)
 	{
 		out.open(file_path , ios::binary);
@@ -66,7 +66,7 @@ void hash_table::insert(std::string t_key , std::string t_value) const
 		}
 	}
 	in.close() , tmp.close();
-	out.open(file_path , ios::binary) , tmp_.open("../" + folder_name + "/tmp.dat" , ios::binary);
+	out.open(file_path , ios::binary) , tmp_.open("" + folder_name + "_tmp.dat" , ios::binary);
 	for (int i = 0 , tot;i < file_size;++ i)
 	{
 		tmp_.read(reinterpret_cast<char *> (&tot) , sizeof (int));
@@ -90,9 +90,9 @@ void hash_table::insert(std::string t_key , std::string t_value) const
 void hash_table::erase(std::string t_key , std::string t_value) const
 {
 	unsigned int hash_value = gethash(t_key);
-	std::string file_path = "../" + folder_name + "/hash_table_" + std::to_string(hash_value >> nsize) + ".dat";
+	std::string file_path = "" + folder_name + "_hash_table_" + std::to_string(hash_value >> nsize) + ".dat";
 	std::ifstream in , tmp_;std::ofstream out , tmp;
-	in.open(file_path , ios::binary) , tmp.open("../" + folder_name + "/tmp.dat" , ios::binary) , assert(in);
+	in.open(file_path , ios::binary) , tmp.open("" + folder_name + "_tmp.dat" , ios::binary) , assert(in);
 	char key[max_len] , value[max_len];
 	for (int i = 0 , tot;i < file_size;++ i)
 	{
@@ -104,7 +104,7 @@ void hash_table::erase(std::string t_key , std::string t_value) const
 		}
 	}
 	in.close() , tmp.close();
-	out.open(file_path , ios::binary) , tmp_.open("../" + folder_name + "/tmp.dat" , ios::binary);
+	out.open(file_path , ios::binary) , tmp_.open("" + folder_name + "_tmp.dat" , ios::binary);
 	strcpy(key , t_key.c_str()) , strcpy(value , t_value.c_str());
 	for (int i = 0 , tot , flag = 1;i < file_size;++ i)
 	{
@@ -132,7 +132,7 @@ std::vector<std::string> hash_table::display() const
 	char key[max_len] , value[max_len];
 	for (int i = 0 , tot;i < file_cnt;++ i)
 	{
-		std::ifstream in("../" + folder_name + "/hash_table_" + std::to_string(i) + ".dat" , ios::binary);
+		std::ifstream in("" + folder_name + "_hash_table_" + std::to_string(i) + ".dat" , ios::binary);
 		if (in)
 		{
 			for (int j = 0;j < file_size;++ j)

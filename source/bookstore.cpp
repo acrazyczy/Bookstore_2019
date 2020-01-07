@@ -10,10 +10,10 @@ book_list bookstore::books;
 bookstore::bookstore()
 {
 	std::ifstream in;std::ofstream out;
-	in.open("../report/finance.dat" , ios::binary);
+	in.open("report_finance.dat" , ios::binary);
 	if (!in)
 	{
-		out.open("../report/finance.dat" , ios::binary);
+		out.open("report_finance.dat" , ios::binary);
 		double x = 0;
 		out.write(reinterpret_cast<char *> (&x) , sizeof (double));
 		out.write(reinterpret_cast<char *> (&x) , sizeof (double));
@@ -22,8 +22,8 @@ bookstore::bookstore()
 		out.close();
 	}
 	else in.close();
-	in.open("../report/system_log.dat" , ios::binary);
-	if (!in) out.open("../report/system_log.dat" , ios::binary) , out.close();
+	in.open("report_system_log.dat" , ios::binary);
+	if (!in) out.open("report_system_log.dat" , ios::binary) , out.close();
 	else in.close();
 	root = Root("root" , "sjtu" , "root") , current_user = &visitor;
 }
@@ -32,12 +32,12 @@ bookstore::Visitor::Visitor(std::string user_id_ , std::string passwd_ , std::st
 {
 	user_id = user_id_;
 	std::ifstream in;std::ofstream out;
-	in.open(std::string("../user/" + user_id + ".dat") , ios::binary);
+	in.open(std::string("user_" + user_id + ".dat") , ios::binary);
 	char cstr[max_len];
 	if (!in)
 	{
 		passwd = passwd_ , name = name_ , authority = authority_;
-		out.open(std::string("../user/" + user_id + ".dat") , ios::binary);
+		out.open(std::string("user_" + user_id + ".dat") , ios::binary);
 		strcpy(cstr , passwd.c_str()) , out.write(reinterpret_cast<char *> (&cstr) , sizeof (cstr));
 		strcpy(cstr , name.c_str()) , out.write(reinterpret_cast<char *> (&cstr) , sizeof (cstr));
 		out.write(reinterpret_cast<char *> (&authority) , sizeof (int));
@@ -58,7 +58,7 @@ void bookstore::Visitor::add_to_system_log() const
 
 void bookstore::Visitor::reg(std::string user_id_ , std::string passwd_ , std::string name_) const
 {
-	std::ifstream in("../user/" + user_id_ + ".dat" , ios::binary);
+	std::ifstream in("user_" + user_id_ + ".dat" , ios::binary);
 	if (in) invalid() , in.close();
 	else Visitor(user_id_ , passwd_ , name_ , 1);
 	//to do : add to system log
@@ -89,7 +89,7 @@ void bookstore::User::show(int key_type, std::string key) const
 
 void bookstore::User::_passwd(std::string user_id_ , std::string old_passwd_ , std::string passwd_) const
 {
-	std::string file_path = "../user/" + user_id_ + ".dat";
+	std::string file_path = "user_" + user_id_ + ".dat";
 	std::ifstream in(file_path , ios::binary);
 	if (!in) invalid();
 	else
@@ -123,7 +123,7 @@ void bookstore::Admin::useradd(std::string user_id_ , std::string passwd_ , std:
 {
 	if (authority_ < authority)
 	{
-		std::ifstream in("../user/" + user_id_ + ".dat" , ios::binary);
+		std::ifstream in("user_" + user_id_ + ".dat" , ios::binary);
 		if (in) invalid() , in.close();
 		else Visitor(user_id_ , passwd_ , name_ , authority_);
 	}
@@ -177,7 +177,7 @@ bookstore::Root::Root(std::string user_id_ , std::string passwd_ , std::string n
 
 void bookstore::Root::show_finance(int time = -1) const
 {
-	std::ifstream in("../report/finance.dat" , ios::binary);
+	std::ifstream in("report_finance.dat" , ios::binary);
 	double val[2] = {0 , 0};
 	if (~time)
 	{
@@ -205,9 +205,9 @@ void bookstore::Root::del(std::string user_id_) const
 	if (user_id_ == std::string("root")) invalid();
 	else
 	{
-		std::ifstream in("../user/" + user_id_ + ".dat" , ios::binary);
+		std::ifstream in("user_" + user_id_ + ".dat" , ios::binary);
 		if (!in) invalid();
-		else in.close() , remove(("../user/" + user_id_ + ".dat").c_str());
+		else in.close() , remove(("user_" + user_id_ + ".dat").c_str());
 		//to do : remove work report
 		//to do : add to system_log
 		//to do : add to operating_list
@@ -221,7 +221,7 @@ void bookstore::Root::log() const
 
 void bookstore::add_to_finance(bool flag , double money)
 {
-	std::fstream file("../report/finance.dat" , ios::binary | ios::in | ios::out);
+	std::fstream file("report_finance.dat" , ios::binary | ios::in | ios::out);
 	file.seekg(0);
 	double val[2];
 	file.read(reinterpret_cast<char *> (&val[0]) , sizeof (double));
@@ -242,7 +242,7 @@ void bookstore::add_to_finance(bool flag , double money)
 
 void bookstore::su(std::string user_id_ , std::string passwd_)
 {
-	std::ifstream in(std::string("../user/" + user_id_ + ".dat") , ios::binary);
+	std::ifstream in(std::string("user_" + user_id_ + ".dat") , ios::binary);
 	if (!in) invalid();
 	else
 	{
