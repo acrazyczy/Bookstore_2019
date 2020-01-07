@@ -17,12 +17,12 @@ book_list::book_list()
 	else in.close();
 }
 
-void book_list::add_to_hash_tables(book bk)
+void book_list::add_to_hash_tables(const book &bk)
 {
 	name_table.insert(bk.name , bk.ISBN) , author_table.insert(bk.author , bk.ISBN);
 	char *cstr = new char [max_len];
 	int len = 0;std::set<std::string> bin;std::string tmp;
-	for (std::string::iterator it = bk.keyword.begin();it != bk.keyword.end();++ it)
+	for (std::string::const_iterator it = bk.keyword.begin();it != bk.keyword.end();++ it)
 		if (*it == '|')
 		{
 			cstr[len ++] = '\0' , tmp = std::string(cstr);
@@ -34,12 +34,12 @@ void book_list::add_to_hash_tables(book bk)
 	delete [] cstr;
 }
 
-void book_list::remove_from_hash_tables(book bk)
+void book_list::remove_from_hash_tables(const book &bk)
 {
 	name_table.erase(bk.name , bk.ISBN) , author_table.erase(bk.author , bk.ISBN);
 	char *cstr = new char [max_len];
 	int len = 0;std::set<std::string> bin;std::string tmp;
-	for (std::string::iterator it = bk.keyword.begin();it != bk.keyword.end();++ it)
+	for (std::string::const_iterator it = bk.keyword.begin();it != bk.keyword.end();++ it)
 		if (*it == '|')
 		{
 			cstr[len ++] = '\0' , tmp = std::string(cstr);
@@ -80,7 +80,7 @@ book_list::book::book(std::string ISBN_ , std::string name_ = "" , std::string a
 }
 
 
-double book_list::buy(std::string ISBN_ , int quantity_) const
+double book_list::buy(const std::string &ISBN_ , const int &quantity_) const
 {
 	std::string file_path = "book_list_" + ISBN_ + ".dat";
 	std::ifstream in(file_path , ios::binary);
@@ -110,7 +110,7 @@ void book_list::display() const
 	}
 }
 
-void book_list::find(int key_type , std::string key) const
+void book_list::find(const int &key_type , const std::string &key) const
 {
 	std::ifstream in;
 	if (key_type == 1)
@@ -128,9 +128,9 @@ void book_list::find(int key_type , std::string key) const
 	}
 }
 
-void book_list::select(std::string ISBN_) {book(selected = ISBN_);}
+void book_list::select(const std::string &ISBN_) {book(selected = ISBN_);}
 
-bool book_list::modify(std::string ISBN_ , std::string name_ , std::string author_ , std::string keyword_ , double price_)
+bool book_list::modify(const std::string &ISBN_ , const std::string &name_ , const std::string &author_ , const std::string &keyword_ , const double &price_)
 {
 	if (selected.empty()) return 0;
 	if (!ISBN_.empty())
@@ -148,7 +148,7 @@ bool book_list::modify(std::string ISBN_ , std::string name_ , std::string autho
 	return 1;
 }
 
-bool book_list::import(int quantity_) const
+bool book_list::import(const int &quantity_) const
 {
 	if (selected.empty()) return 0;
 	std::string file_path = "book_list_" + selected + ".dat";

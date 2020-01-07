@@ -25,29 +25,29 @@ private:
 
 		Visitor (std::string , std::string = "" , std::string = "" , int = 0);
 
-		virtual void buy(std::string , int) const {invalid();}
+		virtual void buy(const std::string& , const int&) const {invalid();}
 
-		virtual void modify(std::string , std::string , std::string , std::string , double) const {invalid();}
+		virtual void modify(const std::string& , const std::string& , const std::string& , const std::string& , const double&) const {invalid();}
 
 		virtual void show(int = 0 , std::string = "") const {invalid();}
 
-		virtual void show_finance(int) const {invalid();}
+		virtual void show_finance(int = -1) const {invalid();}
 
-		virtual void import(int , double) const {invalid();}
+		virtual void import(const int& , const double&) const {invalid();}
 
-		virtual void select(std::string) const {invalid();}
+		virtual void select(const std::string&) const {invalid();}
 
-		virtual void useradd(std::string , std::string , std::string , int) const {invalid();}
+		virtual void useradd(const std::string& , const std::string& , const std::string& , const int&) const {invalid();}
 
-		virtual void _passwd(std::string , std::string , std::string) const {invalid();}
+		virtual void _passwd(const std::string& , const std::string& , const std::string&) const {invalid();}
 
-		virtual void del(std::string) const {invalid();}
+		virtual void del(const std::string&) const {invalid();}
 
-		virtual void report(int) const {invalid();}
+		virtual void report(const int&) const {invalid();}
 
 		virtual void log() const {invalid();}
 
-		virtual void reg(std::string , std::string , std::string) const;
+		virtual void reg(const std::string& , const std::string& , const std::string&) const;
 
 		~Visitor (){}
 	}visitor;
@@ -55,17 +55,17 @@ private:
 	class User : public Visitor
 	{
 	private:
-		void add_to_shopping_list(std::string) const;
+		void add_to_shopping_list(const std::string&) const;
 	public:
 		User(){authority = 1;}
 
 		User (std::string , std::string = "" , std::string = "" , int = 1);
 
-		virtual void buy(std::string , int) const override;
+		virtual void buy(const std::string& , const int&) const override;
 
 		virtual void show(int = 0 , std::string = "") const override;
 
-		virtual void _passwd(std::string , std::string , std::string) const override;
+		virtual void _passwd(const std::string& , const std::string& , const std::string&) const override;
 
 		~User (){}
 	}user;
@@ -73,7 +73,7 @@ private:
 	class Admin : public User
 	{
 	private:
-		virtual void add_to_operating_list(std::string) const;
+		virtual void add_to_operating_list(const std::string&) const;
 
 		virtual void report_work() const;
 	public:
@@ -81,15 +81,15 @@ private:
 
 		Admin (std::string , std::string = "" , std::string = "" , int = 3);
 
-		virtual void useradd(std::string , std::string , std::string , int) const override;
+		virtual void useradd(const std::string& , const std::string& , const std::string& , const int&) const override;
 
-		virtual void select(std::string) const override;
+		virtual void select(const std::string&) const override;
 
-		virtual void modify(std::string , std::string , std::string , std::string , double) const override;
+		virtual void modify(const std::string& , const std::string& , const std::string& , const std::string& , const double&) const override;
 
-		virtual void import(int , double) const override;
+		virtual void import(const int& , const double&) const override;
 
-		virtual void report(int) const override;
+		virtual void report(const int&) const override;
 
 		~Admin (){}
 	}admin;
@@ -102,18 +102,18 @@ private:
 
 		Root (std::string , std::string = "" , std::string = "" , int = 7);
 
-		virtual void show_finance(int) const override;
+		virtual void show_finance(int = -1) const override;
 
-		virtual void del(std::string) const override;
+		virtual void del(const std::string&) const override;
 
 		virtual void log() const override;
 
 		~Root (){}
 	}root;
 
-	static void add_to_finance(bool , double);
+	static void add_to_finance(const bool& , const double&);
 
-	void su(std::string , std::string);
+	void su(const std::string& , const std::string&);
 
 	static Visitor *current_user;
 
@@ -122,7 +122,7 @@ private:
 public:
 	bookstore();
 
-	bool command(int , char *[] , bool& , std::ifstream&);
+	bool command(const int& , char *[] , bool& , std::ifstream&);
 
 	~bookstore(){}
 };

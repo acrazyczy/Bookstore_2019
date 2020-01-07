@@ -4,7 +4,7 @@
 
 #include "hash_table.h"
 
-unsigned int hash_table::gethash(std::string str) const
+unsigned int hash_table::gethash(const std::string &str) const
 {
 	char *cstr = new char [str.length() + 1];
   	std::strcpy(cstr, str.c_str());
@@ -23,7 +23,7 @@ hash_table::hash_table(std::string name)
 	else out.open("" + folder_name + "_tmp.dat" , ios::binary),out.close();
 }
 
-std::vector<std::string> hash_table::find(std::string target) const
+std::vector<std::string> hash_table::find(const std::string &target) const
 {
 	std::vector<std::string> ret;
 	unsigned int hash_value = gethash(target);
@@ -43,7 +43,7 @@ std::vector<std::string> hash_table::find(std::string target) const
 	return ret;
 }
 
-void hash_table::insert(std::string t_key , std::string t_value) const
+void hash_table::insert(const std::string &t_key , const std::string &t_value) const
 {
 	unsigned int hash_value = gethash(t_key);
 	std::string file_path = "" + folder_name + "_hash_table_" + std::to_string(hash_value >> nsize) + ".dat";
@@ -87,7 +87,7 @@ void hash_table::insert(std::string t_key , std::string t_value) const
 	out.close() , tmp_.close();
 }
 
-void hash_table::erase(std::string t_key , std::string t_value) const
+void hash_table::erase(const std::string &t_key , const std::string &t_value) const
 {
 	unsigned int hash_value = gethash(t_key);
 	std::string file_path = "" + folder_name + "_hash_table_" + std::to_string(hash_value >> nsize) + ".dat";

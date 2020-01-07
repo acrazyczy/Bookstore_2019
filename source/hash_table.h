@@ -13,24 +13,24 @@ private:
 	std::string folder_name;
 
 	static const int ncnt = 15;
-	static const int nsize = 4;
+	static const int nsize = 0;
 	static const int file_cnt = 1 << ncnt;
 	static const int file_size = 1 << nsize;
 	static const unsigned int mod = 1 << ncnt + nsize;
 	static const unsigned int P = 67;
 
-	unsigned int gethash(std::string) const;
+	unsigned int gethash(const std::string&) const;
 
 public:
 	hash_table(){}
 
 	hash_table(std::string);
 
-	std::vector<std::string> find(std::string) const;
+	std::vector<std::string> find(const std::string&) const;
 
-	void insert(std::string , std::string) const;
+	void insert(const std::string& , const std::string&) const;
 
-	void erase(std::string , std::string) const;
+	void erase(const std::string& , const std::string&) const;
 
 	std::vector<std::string> display() const;
 

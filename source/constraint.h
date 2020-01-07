@@ -22,6 +22,6 @@ using std::ios;
 
 const int max_len = 55;
 
-std::string convert_double_to_string(double);
+std::string convert_double_to_string(const double&);
 
 #endif //CODE_CONSTRAINT_H

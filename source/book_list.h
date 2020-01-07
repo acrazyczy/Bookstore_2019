@@ -32,23 +32,23 @@ private:
 		~book(){}
 	};
 
-	static void add_to_hash_tables(book);
+	static void add_to_hash_tables(const book&);
 
-	static void remove_from_hash_tables(book);
+	static void remove_from_hash_tables(const book&);
 public:
 	book_list();
 
-	double buy(std::string , int) const;
+	double buy(const std::string& , const int&) const;
 
 	void display() const;
 
-	void find(int , std::string) const;
+	void find(const int& , const std::string&) const;
 
-	void select(std::string);
+	void select(const std::string&);
 
-	bool modify(std::string , std::string , std::string , std::string , double);
+	bool modify(const std::string& , const std::string& , const std::string& , const std::string& , const double&);
 
-	bool import(int) const;
+	bool import(const int&) const;
 
 	~book_list(){}
 };

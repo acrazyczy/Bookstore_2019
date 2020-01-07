@@ -57,7 +57,7 @@ void bookstore::Visitor::add_to_system_log() const
 	//to do
 }
 
-void bookstore::Visitor::reg(std::string user_id_ , std::string passwd_ , std::string name_) const
+void bookstore::Visitor::reg(const std::string &user_id_ , const std::string &passwd_ , const std::string &name_) const
 {
 	std::ifstream in("user_" + user_id_ + ".dat" , ios::binary);
 	if (in) invalid() , in.close();
@@ -67,12 +67,12 @@ void bookstore::Visitor::reg(std::string user_id_ , std::string passwd_ , std::s
 
 bookstore::User::User(std::string user_id_ , std::string passwd_ , std::string name_ , int authority_) : Visitor(user_id_ , passwd_ , name_ , authority_) {}
 
-void bookstore::User::add_to_shopping_list(std::string) const
+void bookstore::User::add_to_shopping_list(const std::string&) const
 {
 	//to do
 }
 
-void bookstore::User::buy(std::string ISBN , int quantity) const
+void bookstore::User::buy(const std::string &ISBN , const int &quantity) const
 {
 	double ret = books.buy(ISBN , quantity);
 	if (ret == -1.) invalid();
@@ -88,7 +88,7 @@ void bookstore::User::show(int key_type, std::string key) const
 	else books.find(key_type , key);
 }
 
-void bookstore::User::_passwd(std::string user_id_ , std::string old_passwd_ , std::string passwd_) const
+void bookstore::User::_passwd(const std::string &user_id_ , const std::string &old_passwd_ , const std::string &passwd_) const
 {
 	std::string file_path = "user_" + user_id_ + ".dat";
 	std::ifstream in(file_path , ios::binary);
@@ -112,7 +112,7 @@ void bookstore::User::_passwd(std::string user_id_ , std::string old_passwd_ , s
 
 bookstore::Admin::Admin(std::string user_id_ , std::string passwd_ , std::string name_ , int authority_) : User(user_id_ , passwd_ , name_ , authority_) {}
 
-void bookstore::Admin::add_to_operating_list(std::string) const
+void bookstore::Admin::add_to_operating_list(const std::string&) const
 {
 	//to do
 }
@@ -122,7 +122,7 @@ void bookstore::Admin::report_work() const
 	//to do
 }
 
-void bookstore::Admin::useradd(std::string user_id_ , std::string passwd_ , std::string name_ , int authority_) const
+void bookstore::Admin::useradd(const std::string &user_id_ , const std::string &passwd_ , const std::string &name_ , const int &authority_) const
 {
 	if (authority_ < authority)
 	{
@@ -135,14 +135,14 @@ void bookstore::Admin::useradd(std::string user_id_ , std::string passwd_ , std:
 	//to do : add to add_to_operating_list
 }
 
-void bookstore::Admin::select(std::string ISBN) const
+void bookstore::Admin::select(const std::string &ISBN) const
 {
 	books.select(ISBN);
 	//to do : add to system_log
 	//to do : add to operating_list
 }
 
-void bookstore::Admin::modify(std::string ISBN_ , std::string name_ , std::string author_ , std::string keyword_ , double price_) const
+void bookstore::Admin::modify(const std::string &ISBN_ , const std::string &name_ , const std::string &author_ , const std::string &keyword_ , const double &price_) const
 {
 	bool flag = books.modify(ISBN_ , name_ , author_ , keyword_ , price_);
 	if (!flag) invalid();
@@ -150,7 +150,7 @@ void bookstore::Admin::modify(std::string ISBN_ , std::string name_ , std::strin
 	//to do : add to operating_list
 }
 
-void bookstore::Admin::import(int quantity , double cost_price) const
+void bookstore::Admin::import(const int &quantity , const double &cost_price) const
 {
 	bool flag = books.import(quantity);
 	//to do : add to system_log
@@ -159,7 +159,7 @@ void bookstore::Admin::import(int quantity , double cost_price) const
 	else invalid();
 }
 
-void bookstore::Admin::report(int rep_type) const
+void bookstore::Admin::report(const int &rep_type) const
 {
 	if (rep_type && authority != 7) invalid();
 	else switch (rep_type)
@@ -178,7 +178,7 @@ void bookstore::Admin::report(int rep_type) const
 
 bookstore::Root::Root(std::string user_id_ , std::string passwd_ , std::string name_ , int authority_) : Admin(user_id_ , passwd_ , name_ , authority_) {}
 
-void bookstore::Root::show_finance(int time = -1) const
+void bookstore::Root::show_finance(int time) const
 {
 	std::ifstream in("report_finance.dat" , ios::binary);
 	double val[2] = {0 , 0};
@@ -203,7 +203,7 @@ void bookstore::Root::show_finance(int time = -1) const
 	in.close();
 }
 
-void bookstore::Root::del(std::string user_id_) const
+void bookstore::Root::del(const std::string &user_id_) const
 {
 	if (user_id_ == std::string("root")) invalid();
 	else
@@ -222,7 +222,7 @@ void bookstore::Root::log() const
 	//to do
 }
 
-void bookstore::add_to_finance(bool flag , double money)
+void bookstore::add_to_finance(const bool &flag , const double &money)
 {
 	std::fstream file("report_finance.dat" , ios::binary | ios::in | ios::out);
 	file.seekg(0);
@@ -238,12 +238,12 @@ void bookstore::add_to_finance(bool flag , double money)
 	file.write(reinterpret_cast<char *> (&val[1]) , sizeof (double));
 	file.write(reinterpret_cast<char *> (&tot) , sizeof (int));
 	file.seekp(0 , ios::end);
-	file.write(reinterpret_cast<char *> (&flag) , sizeof (bool));
-	file.write(reinterpret_cast<char *> (&money) , sizeof (double));
+	file.write(reinterpret_cast<const char *> (&flag) , sizeof (bool));
+	file.write(reinterpret_cast<const char *> (&money) , sizeof (double));
 	file.close();
 }
 
-void bookstore::su(std::string user_id_ , std::string passwd_)
+void bookstore::su(const std::string &user_id_ , const std::string &passwd_)
 {
 	std::ifstream in(std::string("user_" + user_id_ + ".dat") , ios::binary);
 	if (!in) invalid();
@@ -261,7 +261,7 @@ void bookstore::su(std::string user_id_ , std::string passwd_)
 	}
 }
 
-bool bookstore::command(int argc , char *argv[] , bool &src , std::ifstream &ist)
+bool bookstore::command(const int &argc , char *argv[] , bool &src , std::ifstream &ist)
 {
 	if (!argc)
 	{
