@@ -33,7 +33,7 @@ bookstore::Visitor::Visitor(std::string user_id_ , std::string passwd_ , std::st
 	user_id = user_id_;
 	std::ifstream in;std::ofstream out;
 	in.open(std::string("user_" + user_id + ".dat") , ios::binary);
-	char cstr[max_len];
+	char cstr[max_len];memset(cstr , 0 , sizeof cstr);
 	if (!in)
 	{
 		passwd = passwd_ , name = name_ , authority = authority_;
@@ -98,7 +98,7 @@ void bookstore::User::_passwd(std::string user_id_ , std::string old_passwd_ , s
 		Visitor tmp(user_id_);
 		if (current_user -> authority == 7 || tmp.passwd == old_passwd_)
 		{
-			std::ofstream out(file_path , ios::binary);char cstr[max_len];
+			std::ofstream out(file_path , ios::binary);char cstr[max_len];memset(cstr , 0 , sizeof cstr);
 			tmp.passwd = passwd_;
 			strcpy(cstr , tmp.passwd.c_str()) , out.write(reinterpret_cast<char *> (&cstr) , sizeof (cstr));
 			strcpy(cstr , tmp.name.c_str()) , out.write(reinterpret_cast<char *> (&cstr) , sizeof (cstr));

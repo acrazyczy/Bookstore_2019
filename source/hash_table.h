@@ -12,8 +12,8 @@ class hash_table
 private:
 	std::string folder_name;
 
-	static const int ncnt = 16;
-	static const int nsize = 8;
+	static const int ncnt = 15;
+	static const int nsize = 4;
 	static const int file_cnt = 1 << ncnt;
 	static const int file_size = 1 << nsize;
 	static const unsigned int mod = 1 << ncnt + nsize;

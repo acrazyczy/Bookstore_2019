@@ -9,7 +9,6 @@
 
 int main()
 {
-	return 0;
 	char *cmd = new char [1000];int argc = 0 , qut = 0;char *argv[100];
 	int tot = 0;bool src = 1;std::ifstream cmds;
 	bookstore Douban;

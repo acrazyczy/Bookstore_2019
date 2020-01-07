@@ -57,7 +57,7 @@ book_list::book::book(std::string ISBN_ , std::string name_ = "" , std::string a
 	std::string file_path = "book_list_" + ISBN + ".dat";
 	std::ifstream in;std::ofstream out;
 	in.open(file_path , ios::binary);
-	char cstr[max_len];
+	char cstr[max_len];memset(cstr , 0 , sizeof cstr);
 	if (!in)
 	{
 		out.open(file_path , ios::binary);
@@ -90,7 +90,7 @@ double book_list::buy(std::string ISBN_ , int quantity_) const
 	if (target.quantity < quantity_) return -1;
 	target.quantity -= quantity_;
 	std::ofstream out(file_path , ios::binary);
-	char cstr[max_len];
+	char cstr[max_len];memset(cstr , 0 , sizeof cstr);
 	strcpy(cstr , target.name.c_str()) , out.write(reinterpret_cast<char *> (&cstr) , sizeof cstr);
 	strcpy(cstr , target.author.c_str()) , out.write(reinterpret_cast<char *> (&cstr) , sizeof cstr);
 	strcpy(cstr , target.keyword.c_str()) , out.write(reinterpret_cast<char *> (&cstr) , sizeof cstr);
@@ -155,7 +155,7 @@ bool book_list::import(int quantity_) const
 	book target(selected);
 	target.quantity += quantity_;
 	std::ofstream out(file_path , ios::binary);
-	char cstr[max_len];
+	char cstr[max_len];memset(cstr , 0 , sizeof cstr);
 	strcpy(cstr , target.name.c_str()) , out.write(reinterpret_cast<char *> (&cstr) , sizeof cstr);
 	strcpy(cstr , target.author.c_str()) , out.write(reinterpret_cast<char *> (&cstr) , sizeof cstr);
 	strcpy(cstr , target.keyword.c_str()) , out.write(reinterpret_cast<char *> (&cstr) , sizeof cstr);

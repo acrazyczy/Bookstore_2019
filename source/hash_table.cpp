@@ -34,7 +34,7 @@ std::vector<std::string> hash_table::find(std::string target) const
 		in.read(reinterpret_cast<char *> (&tot) , sizeof (int));
 		for (int j = 0;j < tot;++ j)
 		{
-			char key[max_len] , value[max_len];
+			char key[max_len] , value[max_len];memset(key , 0 , sizeof key) , memset(value , 0 , sizeof value);
 			in.read(reinterpret_cast<char *> (&key) , sizeof key) , in.read(reinterpret_cast<char *> (&value) , sizeof value);
 			if (std::string(key) == target) ret.push_back(std::string(value));
 		}
@@ -55,7 +55,7 @@ void hash_table::insert(std::string t_key , std::string t_value) const
 		for (int i = 0 , x = 0;i < file_size;++ i) out.write(reinterpret_cast<char *> (&x) , sizeof (int));
 		out.close() , in.open(file_path , ios::binary);
 	}
-	char key[max_len] , value[max_len];
+	char key[max_len] , value[max_len];memset(key , 0 , sizeof key) , memset(value , 0 , sizeof value);
 	for (int i = 0 , tot;i < file_size;++ i)
 	{
 		in.read(reinterpret_cast<char *> (&tot) , sizeof (int)) , tmp.write(reinterpret_cast<char *> (&tot) , sizeof (int));
@@ -93,7 +93,7 @@ void hash_table::erase(std::string t_key , std::string t_value) const
 	std::string file_path = "" + folder_name + "_hash_table_" + std::to_string(hash_value >> nsize) + ".dat";
 	std::ifstream in , tmp_;std::ofstream out , tmp;
 	in.open(file_path , ios::binary) , tmp.open("" + folder_name + "_tmp.dat" , ios::binary) , assert(in);
-	char key[max_len] , value[max_len];
+	char key[max_len] , value[max_len];memset(key , 0 , sizeof key) , memset(value , 0 , sizeof value);
 	for (int i = 0 , tot;i < file_size;++ i)
 	{
 		in.read(reinterpret_cast<char *> (&tot) , sizeof (int)) , tmp.write(reinterpret_cast<char *> (&tot) , sizeof (int));
@@ -129,7 +129,7 @@ void hash_table::erase(std::string t_key , std::string t_value) const
 std::vector<std::string> hash_table::display() const
 {
 	std::vector<std::string> ret;
-	char key[max_len] , value[max_len];
+	char key[max_len] , value[max_len];memset(key , 0 , sizeof key) , memset(value , 0 , sizeof value);
 	for (int i = 0 , tot;i < file_cnt;++ i)
 	{
 		std::ifstream in("" + folder_name + "_hash_table_" + std::to_string(i) + ".dat" , ios::binary);
@@ -147,5 +147,6 @@ std::vector<std::string> hash_table::display() const
 			in.close();
 		}
 	}
+	sort(ret.begin() , ret.end());
 	return ret;
 }
