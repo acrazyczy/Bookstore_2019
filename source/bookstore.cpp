@@ -25,7 +25,7 @@ bookstore::bookstore()
 	in.open("report_system_log.dat" , ios::binary);
 	if (!in) out.open("report_system_log.dat" , ios::binary) , out.close();
 	else in.close();
-	root = Root("root" , "sjtu" , "root") , current_user = &visitor;
+	root = Root("root" , "sjtu" , "root") , current_user = &root;
 }
 
 bookstore::Visitor::Visitor(std::string user_id_ , std::string passwd_ , std::string name_ , int authority_)
