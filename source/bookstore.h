@@ -122,7 +122,7 @@ private:
 public:
 	bookstore();
 
-	bool command(int argc, char *argv[]);
+	bool command(int , char *[] , bool& , std::ifstream&);
 
 	~bookstore(){}
 };

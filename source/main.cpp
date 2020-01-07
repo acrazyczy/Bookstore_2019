@@ -10,10 +10,16 @@
 int main()
 {
 	char *cmd = new char [1000];int argc = 0 , qut = 0;char *argv[100];
-	int tot = 0;
-	for (bookstore Douban;!tot || Douban.command(argc , argv);++ tot)
+	int tot = 0;bool src = 1;std::ifstream cmds;
+	bookstore Douban;
+	for (Douban.command(-1 , argv , src , cmds);!tot || Douban.command(argc , argv , src , cmds);++ tot)
 	{
-		std::cin.getline(cmd , 999 , '\r') , std::cin.get();
+		if (!src)
+		{
+			cmds.getline(cmd , 999);
+			if (cmds.eof()) cmds.close() , src = 1;
+		}
+		if (src) std::cin.getline(cmd , 999);
 		int len = strlen(cmd);argc = 0;
 		cmd[len ++] = ' ' , cmd[len] = '\0';
 		bool flag = 1;
@@ -22,6 +28,7 @@ int main()
 			else if (*c == '\"') qut ^= 1;
 			else if (flag) argv[argc ++] = c , flag = 0;
 	}
+	if (cmds) cmds.close();
 	delete [] cmd;
 	return 0;
 }

@@ -258,7 +258,7 @@ void bookstore::su(std::string user_id_ , std::string passwd_)
 	}
 }
 
-bool bookstore::command(int argc , char *argv[])
+bool bookstore::command(int argc , char *argv[] , bool &src , std::ifstream &ist)
 {
 	if (!argc)
 	{
@@ -266,9 +266,16 @@ bool bookstore::command(int argc , char *argv[])
 		return 1;
 	}
 	if (argc == 1 && std::string(argv[0]) == std::string("exit")) return 0;
-	if (argc == 2 && std::string(argv[0]) == std::string("load"))
+	if (!~argc || argc == 2 && std::string(argv[0]) == std::string("load"))
 	{
-		//to do : load files
+		if (argc != 2 && ~argc) invalid();
+		else
+		{
+			if (~argc) ist.open(argv[1]);
+			else ist.open("command.txt");
+			if (ist) src = 0 , root = Root("root") , current_user = &root;
+			else if (~argc) invalid();
+		}
 		return 1;
 	}
 	if (std::string(argv[0]) == std::string("su"))
