@@ -21,6 +21,7 @@
 using std::ios;
 
 const int max_len = 55;
+const int log_len = 105;
 
 std::string convert_double_to_string(const double&);
 

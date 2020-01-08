@@ -52,22 +52,16 @@ bookstore::Visitor::Visitor(std::string user_id_ , std::string passwd_ , std::st
 	}
 }
 
-void bookstore::Visitor::add_to_system_log() const
-{
-	//to do
-}
-
 void bookstore::Visitor::reg(const std::string &user_id_ , const std::string &passwd_ , const std::string &name_) const
 {
 	std::ifstream in("user_" + user_id_ + ".dat" , ios::binary);
 	if (in) invalid() , in.close();
 	else Visitor(user_id_ , passwd_ , name_ , 1);
-	//to do : add to system log
 }
 
 bookstore::User::User(std::string user_id_ , std::string passwd_ , std::string name_ , int authority_) : Visitor(user_id_ , passwd_ , name_ , authority_) {}
 
-void bookstore::User::add_to_shopping_list(const std::string&) const
+void bookstore::add_to_shopping_list(const std::string&)
 {
 	//to do
 }
@@ -77,9 +71,7 @@ void bookstore::User::buy(const std::string &ISBN , const int &quantity) const
 	double ret = books.buy(ISBN , quantity);
 	if (ret == -1.) invalid();
 	else add_to_finance(1 , ret);
-	//to do : add to system log
 	//to do : add to shopping list
-	//to do : add to finance
 }
 
 void bookstore::User::show(int key_type, std::string key) const
@@ -105,14 +97,21 @@ void bookstore::User::_passwd(const std::string &user_id_ , const std::string &o
 			strcpy(cstr , tmp.name.c_str()) , out.write(reinterpret_cast<char *> (&cstr) , sizeof (cstr));
 			out.write(reinterpret_cast<char *> (&tmp.authority) , sizeof (int));
 			out.close();
-			//to do : add to system_log
 		}else invalid();
 	}
 }
 
 bookstore::Admin::Admin(std::string user_id_ , std::string passwd_ , std::string name_ , int authority_) : User(user_id_ , passwd_ , name_ , authority_) {}
 
-void bookstore::Admin::add_to_operating_list(const std::string&) const
+void bookstore::add_to_system_log(const std::string &message)
+{
+	std::ofstream out("report_system_log.dat" , ios::binary | ios::app);
+	char str [log_len];memset(str , 0 , sizeof str);
+	strcpy(str , message.c_str());
+	out.write(reinterpret_cast<char *> (&str) , log_len) , out.close();
+}
+
+void bookstore::add_to_operating_list(const std::string&)
 {
 	//to do
 }
@@ -128,10 +127,14 @@ void bookstore::Admin::useradd(const std::string &user_id_ , const std::string &
 	{
 		std::ifstream in("user_" + user_id_ + ".dat" , ios::binary);
 		if (in) invalid() , in.close();
-		else Visitor(user_id_ , passwd_ , name_ , authority_);
+		else
+		{
+			Visitor(user_id_ , passwd_ , name_ , authority_);
+			std::string logstr(current_user -> user_id);
+			logstr += ": useradd " + user_id_ , add_to_system_log(logstr);
+		}
 	}
 	else invalid();
-	//to do : add to system_log
 	//to do : add to add_to_operating_list
 }
 
@@ -139,6 +142,8 @@ void bookstore::Admin::select(const std::string &ISBN) const
 {
 	books.select(ISBN);
 	//to do : add to system_log
+	std::string logstr(current_user -> user_id);
+	logstr += ": select " + ISBN , add_to_system_log(logstr);
 	//to do : add to operating_list
 }
 
@@ -146,16 +151,25 @@ void bookstore::Admin::modify(const std::string &ISBN_ , const std::string &name
 {
 	bool flag = books.modify(ISBN_ , name_ , author_ , keyword_ , price_);
 	if (!flag) invalid();
-	//to do : add to system_log
+	else
+	{
+		std::string logstr(current_user -> user_id);
+		logstr += ": modify book(" + books.selected + ")" , add_to_system_log(logstr);
+	}
 	//to do : add to operating_list
 }
 
 void bookstore::Admin::import(const int &quantity , const double &cost_price) const
 {
 	bool flag = books.import(quantity);
-	//to do : add to system_log
 	//to do : add to operating_list
-	if (flag) add_to_finance(0 , cost_price);
+	if (flag)
+	{
+		add_to_finance(0 , cost_price);
+		std::string logstr(current_user -> user_id);
+		logstr += ": import " + std::to_string(quantity) + " * " + books.selected + ", " + convert_double_to_string(cost_price) + " yuan used.";
+		add_to_system_log(logstr);
+	}
 	else invalid();
 }
 
@@ -212,14 +226,23 @@ void bookstore::Root::del(const std::string &user_id_) const
 		if (!in) invalid();
 		else in.close() , remove(("user_" + user_id_ + ".dat").c_str());
 		//to do : remove work report
-		//to do : add to system_log
+		std::string logstr(current_user -> user_id);
+		logstr += ": delete " + user_id_ , add_to_system_log(logstr);
 		//to do : add to operating_list
 	}
 }
 
 void bookstore::Root::log() const
 {
-	//to do
+	std::ofstream log("bookstore.log");std::ifstream in("report_system_log.dat" , ios::binary);
+	char str[log_len];
+	for (in.read(reinterpret_cast<char *> (&str) , log_len);!in.eof();)
+	{
+		log << str << std::endl;
+		in.read(reinterpret_cast<char *> (&str) , log_len);
+	}
+	log.close() , in.close();
+	std::cout << "System log has been written in bookstore.log." << std::endl;
 }
 
 void bookstore::add_to_finance(const bool &flag , const double &money)
@@ -256,7 +279,6 @@ void bookstore::su(const std::string &user_id_ , const std::string &passwd_)
 			if (tmp.authority == 1) user = User(user_id_) , current_user = &user;
 			else if (tmp.authority == 3) admin = Admin(user_id_) , current_user = &admin;
 			else root = Root(user_id_) , current_user = &root;
-			//to do : add to system_log
 		}else invalid();
 	}
 }
@@ -385,7 +407,7 @@ bool bookstore::command(const int &argc , char *argv[] , bool &src , std::ifstre
 	}
 	if (std::string(argv[0]) == std::string("log"))
 	{
-		//to do
+		current_user -> log();
 		return 1;
 	}
 	invalid();

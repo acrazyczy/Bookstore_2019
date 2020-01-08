@@ -16,7 +16,6 @@ private:
 	class Visitor
 	{
 	private:
-		void add_to_system_log() const;
 	public:
 		std::string user_id , passwd , name;
 		int authority;
@@ -54,8 +53,6 @@ private:
 
 	class User : public Visitor
 	{
-	private:
-		void add_to_shopping_list(const std::string&) const;
 	public:
 		User(){authority = 1;}
 
@@ -73,7 +70,6 @@ private:
 	class Admin : public User
 	{
 	private:
-		virtual void add_to_operating_list(const std::string&) const;
 
 		virtual void report_work() const;
 	public:
@@ -112,6 +108,12 @@ private:
 	}root;
 
 	static void add_to_finance(const bool& , const double&);
+
+	static void add_to_operating_list(const std::string&);
+
+	static void add_to_system_log(const std::string&);
+
+	static void add_to_shopping_list(const std::string&);
 
 	void su(const std::string& , const std::string&);
 

@@ -12,7 +12,6 @@ class book_list
 {
 private:
 	static hash_table name_table , author_table , keyword_table;
-	std::string selected;
 
 	class book
 	{
@@ -36,6 +35,8 @@ private:
 
 	static void remove_from_hash_tables(const book& , const int&);
 public:
+	std::string selected;
+
 	book_list();
 
 	double buy(const std::string& , const int&) const;
