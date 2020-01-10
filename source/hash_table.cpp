@@ -52,44 +52,20 @@ void hash_table::insert(const std::string &t_key , const std::string &t_value) c
 {
 	unsigned int hash_value = gethash(t_key);
 	std::string file_path = "" + folder_name + "_hash_table_" + std::to_string(hash_value >> nsize) + ".dat";
-	std::ifstream in , tmp_;std::ofstream out , tmp;
-	in.open(file_path , ios::binary) , tmp.open("" + folder_name + "_tmp.dat" , ios::binary);
+	std::ifstream in;std::ofstream out;
+	in.open(file_path , ios::binary);
 	if (!in)
 	{
 		out.open(file_path , ios::binary);
 		for (int i = 0 , x = 0;i < file_size;++ i) out.write(reinterpret_cast<char *> (&x) , sizeof (int));
-		out.close() , in.open(file_path , ios::binary);
-	}
+		out.close();
+	}else in.close();
+	std::fstream file(file_path , ios::binary | ios::in | ios::out);int tot;
+	file.seekg(0) , file.read(reinterpret_cast <char *> (&tot) , sizeof (int)) , ++ tot , file.seekp(0) , file.write(reinterpret_cast <char *> (&tot) , sizeof (int));
 	char key[max_len] , value[max_len];memset(key , 0 , max_len) , memset(value , 0 , max_len);
-	for (int i = 0 , tot;i < file_size;++ i)
-	{
-		in.read(reinterpret_cast<char *> (&tot) , sizeof (int)) , tmp.write(reinterpret_cast<char *> (&tot) , sizeof (int));
-		for (int j = 0;j < tot;++ j)
-		{
-			in.read(reinterpret_cast<char *> (&key) , max_len) , in.read(reinterpret_cast<char *> (&value) , max_len);
-			tmp.write(reinterpret_cast<char *> (&key) , max_len) , tmp.write(reinterpret_cast<char *> (&value) , max_len);
-		}
-	}
-	in.close() , tmp.close();
-	out.open(file_path , ios::binary) , tmp_.open("" + folder_name + "_tmp.dat" , ios::binary);
-	for (int i = 0 , tot;i < file_size;++ i)
-	{
-		tmp_.read(reinterpret_cast<char *> (&tot) , sizeof (int));
-		tot += i == (hash_value & (file_size - 1));
-		out.write(reinterpret_cast<char *> (&tot) , sizeof (int));
-		tot -= i == (hash_value & (file_size - 1));
-		for (int j = 0;j < tot;++ j)
-		{
-			tmp_.read(reinterpret_cast<char *> (&key) , max_len) , tmp_.read(reinterpret_cast<char *> (&value) , max_len);
-			out.write(reinterpret_cast<char *> (&key) , max_len) , out.write(reinterpret_cast<char *> (&value) , max_len);
-		}
-		if (i == (hash_value & (file_size - 1)))
-		{
-			strcpy(key , t_key.c_str()) , strcpy(value , t_value.c_str());
-			out.write(reinterpret_cast<char *> (&key) , max_len) , out.write(reinterpret_cast<char *> (&value) , max_len);
-		}
-	}
-	out.close() , tmp_.close();
+	strcpy(key , t_key.c_str()) , strcpy(value , t_value.c_str());
+	file.seekp(0 , ios::end) , file.write(reinterpret_cast<char *> (&key) , max_len) , file.write(reinterpret_cast<char *> (&value) , max_len);
+	file.close();
 }
 
 void hash_table::erase(const std::string &t_key , const std::string &t_value) const
